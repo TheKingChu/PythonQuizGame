@@ -26,12 +26,14 @@ def main():
     #quit
     pygame.quit()
 
+
 #a class for representing each question
 class Question:
     def __init__(self, question, choices, answer):
         self.question = question
         self.choices = choices
         self.answer = answer
+
 
 #reads the questions from csv file and creates question objects
 def read_question_from_csv(file_name):
@@ -45,6 +47,7 @@ def read_question_from_csv(file_name):
             choices = [choice1, choice2, choice3, choice4]
             questions.append(Question(question, choices, int(answer)))
         return questions
+
 
 #START SCENE
 def display_start_screen(screen, font):
@@ -136,17 +139,19 @@ def display_question_selection(screen, font):
                 elif button_20.collidepoint(event.pos):
                     return 20
 
+
 #display a question and the 4 choices
 def display_question(screen, font, question):
     #background color
     screen.fill((30, 30, 36))
 
     #display the question text with word-wrapping
-    question_text = font.render(question.question, True, (255, 255, 255))
-    question_rect = question_text.get_rect(topleft=(50, 50))
-    question_width = 700 #width of the question area box
-    question_text = font.render(question.question, True, (255, 255, 255), (30, 30, 30))
-    screen.blit(question_text, question_rect)
+    question_text = wrap_text(question.question, font, 700)
+    y_offset = 50
+    for line in question_text:
+        text = font.render(line, True, (255, 255, 255))
+        screen.blit(text, (50, y_offset))
+        y_offset += font.get_linesize()
 
     #color for each choice button
     button_colors = [(41, 110, 180), (177, 24, 200), (205, 56, 19), (31, 111, 91)]
@@ -167,12 +172,31 @@ def display_question(screen, font, question):
     pygame.display.flip()
     return choices_buttons
 
+
+def wrap_text(text, font, max_width):
+    words = text.split(" ")
+    wrapped_lines = []
+    current_line = ""
+    for word in words:
+        line = current_line + word + " "
+        if font.size(line)[0] <= max_width:
+            current_line = line
+        else:
+            wrapped_lines.append(current_line)
+            current_line = word + " "
+    wrapped_lines.append(current_line)
+    return wrapped_lines
+
+
 #run the quiz with the chosen amount of questions
 def run_quiz_game(screen, font, questions, number_of_questions):
     while True:
-        number_of_questions = display_question_selection(screen, font)
         score = 0
 
+        #display the selection of number of questions
+        number_of_questions = display_question_selection(screen, font)
+
+        #display each question with this for loop
         for question in questions[:number_of_questions]:
             choice_buttons = display_question(screen, font, question)
 
@@ -187,7 +211,8 @@ def run_quiz_game(screen, font, questions, number_of_questions):
                         for i, button in enumerate(choice_buttons):
                             if button.collidepoint(event.pos):
                                 choice = i + 1
-                    
+
+            #check if the choice is correct and add that to the score
             if choice == question.answer:
                 score += 1
 
@@ -198,19 +223,19 @@ def run_quiz_game(screen, font, questions, number_of_questions):
         percentage_correct = (score / number_of_questions) * 100
 
         #choose background color based on the correctness percentage
-        if percentage_correct > 50:
-            background_color = (150, 0, 0) #red
+        if percentage_correct == 0:
+            background_color = (123, 45, 38) #red
         elif percentage_correct < 50:
-            background_color = (100, 100, 0) #yellow
+            background_color = (126, 99, 16) #yellow
         else:
-            background_color = (0, 100, 0) #green
+            background_color = (0, 61, 0) #green
 
         #display result
         screen.fill(background_color)
         result_font_size = 40
         result_font = pygame.font.Font(None, result_font_size)
         result_text = result_font.render("You got " + str(score) + "/" + str(number_of_questions) + " correct.", True, (255, 255, 255))
-        result_text_rect = result_text.get_rect(center=quit_button.center)
+        result_text_rect = result_text.get_rect(center=(screen.get_width() // 2, 100))
         screen.blit(result_text, result_text_rect)
 
         #play again button
