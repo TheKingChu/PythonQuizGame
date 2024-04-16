@@ -48,21 +48,34 @@ def read_question_from_csv(file_name):
 
 #START SCENE
 def display_start_screen(screen, font):
-    screen.fill((235,200,255)) #white screen
-    start_text = font.render("Welcome to quiz!", True, (0, 0, 0))
-    screen.blit(start_text, (250, 50))
+    #background color
+    screen.fill((30, 30, 36)) 
+
+    #for centering the text and buttons on the screen
+    screen_width, screen_heigh = screen.get_size()
+
+    #title text
+    start_font_size = 60
+    start_font = pygame.font.Font(None, start_font_size)
+    start_text = start_font.render("Welcome to quiz!", True, (255, 255, 255))
+    start_text_rect = start_text.get_rect(center=(screen_width // 2, 50))
+    screen.blit(start_text, start_text_rect)
 
     #start button
-    start_button = pygame.Rect(300, 200, 200, 50)
-    pygame.draw.rect(screen, (0, 255, 0), start_button)
-    start_button_text = font.render("Start", True, (0, 0, 0))
-    screen.blit(start_button_text, (350, 210))
+    start_button_width, start_button_height = 200, 50
+    start_button = pygame.Rect((screen_width - start_button_width) // 2, 200, start_button_width, start_button_height)
+    pygame.draw.rect(screen, (0, 200, 0), start_button)
+    start_button_text = font.render("Start", True, (255, 255, 255))
+    start_button_text_rect = start_button_text.get_rect(center=start_button.center)
+    screen.blit(start_button_text, start_button_text_rect)
 
     #quit button
-    quit_button = pygame.Rect(300, 300, 200, 50)
-    pygame.draw.rect(screen, (255, 0, 0), quit_button)
-    quit_button_text = font.render("Quit", True, (0, 0, 0))
-    screen.blit(quit_button_text, (350, 310))
+    quit_button_width, quit_button_height = 200, 50
+    quit_button = pygame.Rect((screen_width - quit_button_width) // 2, 300, quit_button_width, quit_button_height)
+    pygame.draw.rect(screen, (214, 40, 57), quit_button)
+    quit_button_text = font.render("Quit", True, (255, 255, 255))
+    quit_button_text_rect = quit_button_text.get_rect(center=quit_button.center)
+    screen.blit(quit_button_text, quit_button_text_rect)
 
     pygame.display.flip()
 
@@ -81,26 +94,31 @@ def display_start_screen(screen, font):
 
 #choose how many questions to play with
 def display_question_selection(screen, font):
-    screen.fill((100, 200, 100))
-    quiestion_text = font.render("Select the number of question:", True, (0, 0, 0))
+    #background color
+    screen.fill((30, 30, 36))
+
+    #selection text
+    question_font_size = 40
+    quiestion_font = pygame.font.Font(None, question_font_size)
+    quiestion_text = quiestion_font.render("Select the number of question:", True, (255, 255, 255))
     screen.blit(quiestion_text, (50, 50))
 
     #5 questions
     button_5 = pygame.Rect(300, 150, 200, 50)
-    pygame.draw.rect(screen, (0, 255, 0), button_5)
-    button_5_text = font.render("5 questions", True, (0, 0, 0))
+    pygame.draw.rect(screen, (21, 121, 31), button_5)
+    button_5_text = font.render("5 questions", True, (255, 255, 255))
     screen.blit(button_5_text, (350, 160))
 
     #10 questions
     button_10 = pygame.Rect(300, 250, 200, 50)
-    pygame.draw.rect(screen, (0, 255, 0), button_10)
-    button_10_text = font.render("10 questions", True, (0, 0, 0))
+    pygame.draw.rect(screen, (21, 121, 31), button_10)
+    button_10_text = font.render("10 questions", True, (255, 255, 255))
     screen.blit(button_10_text, (340, 260))
 
     #20 questions
     button_20 = pygame.Rect(300, 350, 200, 50)
-    pygame.draw.rect(screen, (0, 255, 0), button_20)
-    button_20_text = font.render("20 questions", True, (0, 0, 0))
+    pygame.draw.rect(screen, (21, 121, 31), button_20)
+    button_20_text = font.render("20 questions", True, (255, 255, 255))
     screen.blit(button_20_text, (340, 360))
 
     pygame.display.flip()
@@ -120,42 +138,114 @@ def display_question_selection(screen, font):
 
 #display a question and the 4 choices
 def display_question(screen, font, question):
-    screen.fill((100, 200, 100))
-    text = font.render(question.question, True, (0, 0, 0))
-    screen.blit(text, (50, 50))
-    y = 150
+    #background color
+    screen.fill((30, 30, 36))
 
-    for i, choice in enumerate(question.choices, 1):
-        choice_text = font.render(f"{i}. {choice}", True, (0, 0, 0))
-        screen.blit(choice_text, (50, y))
-        y += 50
+    #display the question text with word-wrapping
+    question_text = font.render(question.question, True, (255, 255, 255))
+    question_rect = question_text.get_rect(topleft=(50, 50))
+    question_width = 700 #width of the question area box
+    question_text = font.render(question.question, True, (255, 255, 255), (30, 30, 30))
+    screen.blit(question_text, question_rect)
+
+    #color for each choice button
+    button_colors = [(41, 110, 180), (177, 24, 200), (205, 56, 19), (31, 111, 91)]
+
+    #display choices as buttons
+    choices_buttons = []
+    button_width, button_height = 200, 40
+    x_start = (screen.get_width() - button_width * len(question.choices)) // 2
+    y_start = screen.get_height() - 100
+    for i, (choice, color) in enumerate(zip(question.choices, button_colors)):
+        choice_button = pygame.Rect(x_start + i * button_width, y_start, button_width, button_height)
+        pygame.draw.rect(screen, color, choice_button)
+        choice_text = font.render(choice, True, (255, 255, 255))
+        text_rect = choice_text.get_rect(center=choice_button.center)
+        screen.blit(choice_text, text_rect)
+        choices_buttons.append(choice_button)
     
     pygame.display.flip()
+    return choices_buttons
 
 #run the quiz with the chosen amount of questions
 def run_quiz_game(screen, font, questions, number_of_questions):
-    score = 0
+    while True:
+        number_of_questions = display_question_selection(screen, font)
+        score = 0
 
-    for question in questions[:number_of_questions]:
-        display_question(screen, font, question)
-        choice = None
-        while choice is None:
+        for question in questions[:number_of_questions]:
+            choice_buttons = display_question(screen, font, question)
+
+            #wait for the player to chose an answer
+            choice = None
+            while choice is None:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        for i, button in enumerate(choice_buttons):
+                            if button.collidepoint(event.pos):
+                                choice = i + 1
+                    
+            if choice == question.answer:
+                score += 1
+
+        #for centering the text and buttons on the screen
+        screen_width, screen_heigh = screen.get_size()
+
+        #calculate percentage of correct answers
+        percentage_correct = (score / number_of_questions) * 100
+
+        #choose background color based on the correctness percentage
+        if percentage_correct > 50:
+            background_color = (150, 0, 0) #red
+        elif percentage_correct < 50:
+            background_color = (100, 100, 0) #yellow
+        else:
+            background_color = (0, 100, 0) #green
+
+        #display result
+        screen.fill(background_color)
+        result_font_size = 40
+        result_font = pygame.font.Font(None, result_font_size)
+        result_text = result_font.render("You got " + str(score) + "/" + str(number_of_questions) + " correct.", True, (255, 255, 255))
+        result_text_rect = result_text.get_rect(center=quit_button.center)
+        screen.blit(result_text, result_text_rect)
+
+        #play again button
+        replay_button_width, replay_button_height = 200, 50
+        replay_button = pygame.Rect((screen_width - replay_button_width) // 2, 200, replay_button_width, replay_button_height)
+        pygame.draw.rect(screen, (0, 200, 255), replay_button)
+        replay_button_text = font.render("Play Again", True, (255, 255, 255))
+        replay_button_text_rect = replay_button_text.get_rect(center=replay_button.center)
+        screen.blit(replay_button_text, replay_button_text_rect)
+
+        #quit button
+        quit_button_width, quit_button_height = 200, 50
+        quit_button = pygame.Rect((screen_width - quit_button_width) // 2, 300, quit_button_width, quit_button_height)
+        pygame.draw.rect(screen, (200, 0, 0), quit_button)
+        quit_button_text = font.render("Quit", True, (255, 255, 255))
+        quit_button_text_rect = quit_button_text.get_rect(center=quit_button.center)
+        screen.blit(quit_button_text, quit_button_text_rect)
+        pygame.display.flip()
+
+        #QUIT
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-                elif event.type == pygame.KEYDOWN:
-                    if pygame.K_1 <= event.key <= pygame.K_4:
-                        choice = event.key - pygame.K_1 + 1
-        if choice == question.answer:
-            score += 1
-
-    screen.fill((100, 200, 100))
-    result_text = font.render("You got " + str(score) + "/" + str(number_of_questions) + "correct.", True, (0, 0, 0))
-    screen.blit(result_text, (50, 50))
-    pygame.display.flip()
-    #wait 3 seconds before quitting
-    pygame.time.wait(3000)
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    #restarts the game
+                    if replay_button.collidepoint(event.pos):
+                        break
+                    elif quit_button.collidepoint(event.pos):
+                        pygame.quit()
+                        quit()
+            else:
+                continue
+            break
 
 
 if __name__ == "__main__":
