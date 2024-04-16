@@ -190,7 +190,15 @@ def wrap_text(text, font, max_width):
 
 #run the quiz with the chosen amount of questions
 def run_quiz_game(screen, font, questions, number_of_questions):
+    start_timer = pygame.time.get_ticks()
+    
     while True:
+        #calculate the elapsed time
+        elapsed_time = (pygame.time.get_ticks() - start_timer) / 1000.0
+        #display timer text
+        timer_text = font.render("Time spent {:.2f}s".format(elapsed_time), True, (255, 255, 255))
+        timer_text_rect = timer_text.get_rect(topright=(screen.get_width() - 10, 10))
+
         score = 0
 
         #display the selection of number of questions
@@ -232,6 +240,7 @@ def run_quiz_game(screen, font, questions, number_of_questions):
 
         #display result
         screen.fill(background_color)
+        screen.blit(timer_text, timer_text_rect)
         result_font_size = 40
         result_font = pygame.font.Font(None, result_font_size)
         result_text = result_font.render("You got " + str(score) + "/" + str(number_of_questions) + " correct.", True, (255, 255, 255))
@@ -253,6 +262,7 @@ def run_quiz_game(screen, font, questions, number_of_questions):
         quit_button_text = font.render("Quit", True, (255, 255, 255))
         quit_button_text_rect = quit_button_text.get_rect(center=quit_button.center)
         screen.blit(quit_button_text, quit_button_text_rect)
+
         pygame.display.flip()
 
         #QUIT
