@@ -144,6 +144,7 @@ def display_question_selection(screen, font):
 
 #display a question and the 4 choices
 def display_question(screen, font, question, photo_path, countdown_timer):
+    #double buffering for flickering reduction
     back_buffer = pygame.Surface(screen.get_size())
     #background color
     back_buffer.fill((30, 30, 36))
