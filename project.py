@@ -38,6 +38,10 @@ class Question:
         self.answer = answer
         self.photo_path = photo_path
 
+    #shuffle the position of the choice buttons
+    def shuffle_choices(self):
+        random.shuffle(self.choices)
+
 
 #reads the questions from csv file and creates question objects
 def read_question_from_csv(file_name):
@@ -49,7 +53,10 @@ def read_question_from_csv(file_name):
         for row in csv_reader:
             question, choice1, choice2, choice3, choice4, answer, photo_path = row
             choices = [choice1, choice2, choice3, choice4]
-            questions.append(Question(question, choices, int(answer), photo_path))
+            new_question = Question(question, choices, answer, photo_path)
+            #shuffle the choices
+            new_question.shuffle_choices()
+            questions.append(new_question)
         return questions
 
 
@@ -59,7 +66,7 @@ def display_start_screen(screen, font):
     screen.fill((30, 30, 36)) 
 
     #for centering the text and buttons on the screen
-    screen_width, screen_heigh = screen.get_size()
+    screen_width, screen_height = screen.get_size()
 
     #title text
     start_font_size = 60
@@ -239,6 +246,8 @@ def run_quiz_game(screen, font, questions, number_of_questions):
 
         #display each question with this for loop
         for question in questions[:number_of_questions]:
+            print("Shuffled Choices:", question.choices)
+            print("Correct Answer:", question.answer)
             #start the countdown timer
             start_timer = pygame.time.get_ticks()
             countdown_timer = 10 #10 second countdown
@@ -258,7 +267,7 @@ def run_quiz_game(screen, font, questions, number_of_questions):
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         for i, button in enumerate(choice_buttons):
                             if button.collidepoint(event.pos):
-                                choice = i + 1
+                                choice = i
 
                 #check if the time is up
                 if countdown_timer == 0 or choice is not None:
@@ -267,8 +276,8 @@ def run_quiz_game(screen, font, questions, number_of_questions):
 
                 pygame.display.flip()
 
-            #check if the choice is correct and add that to the score
-            if choice == question.answer:
+            #check if the selected choice mathes the shuffled choice index and then add a point if its a correct match
+            if choice == question.choices.index(question.answer):
                 score += 1
 
         #display the result

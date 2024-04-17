@@ -1,10 +1,10 @@
 question, choice1, choice2, choice3, choice4, answer, photo_path
-'What is the name of the main character in "The Legend of Zelda" series?', Link, Zelda, Ganondorf, Tingle, 1,images/zelda.jpg
-'In what year was the first "Pokemon" game released in Japan?', 1999, 1997, 1998, 1996, 4,images/redandgreen.jpg
-'In "Overwatch" what is the name of the character known for her teleportation abilities?', Widowmaker, Tracer, Sombra, Moira, 3,images/ow2.jpg
-'In "League of Legends" what is the name of the in-game currency?', Gold, Silver, Platinum, Riot Point, 1,images/lol.jpg
-'Whats the name of the main character in the "Red Dead Redemption" series?', John Marston, Arthur Morgan, Dutch van der Linde, Jack Marston, 2,images/rdr2.jpg
-'What is the name of the princess who Mario rescues in the "Super Mario" series?', Princess Peach, Princess Daisy, Princess Rosalina, Princess Toadstool, 1,images/peach.jpg
-'The company that created Fortnite also created a game engine named what?', Unity, Godot, Unreal, GameMaker, 3,images/enigines.jpg
-'What 2009 game was developed by Mojang?', Trove, Minecraft, Cube World, Roblox, 2,images/minecraft.jpg
-'What is the name of the museum-curating owl in "Animal Crossing"?', Blathers, Celeste, Tom Nook, Isabelle, 1,images/blathers.jpg
+'What is the name of the main character in "The Legend of Zelda" series?', Link, Zelda, Ganondorf, Tingle, Link,images/zelda.jpg
+'In what year was the first "Pokemon" game released in Japan?', 1999, 1997, 1998, 1996, 1996,images/redandgreen.jpg
+'In "Overwatch" what is the name of the character known for her teleportation abilities?', Widowmaker, Tracer, Sombra, Moira, Sombra,images/ow2.jpg
+'In "League of Legends" what is the name of the in-game currency?', Gold, Silver, Platinum, Riot Point, Gold,images/lol.jpg
+'Whats the name of the main character in the "Red Dead Redemption" series?', John Marston, Arthur Morgan, Dutch van der Linde, Jack Marston, Arthur Morgan,images/rdr2.jpg
+'What is the name of the princess who Mario rescues in the "Super Mario" series?', Princess Peach, Princess Daisy, Princess Rosalina, Princess Toadstool, Princess Peach,images/peach.jpg
+'The company that created Fortnite also created a game engine named what?', Unity, Godot, Unreal, GameMaker, Unreal,images/enigines.jpg
+'What 2009 game was developed by Mojang?', Trove, Minecraft, Cube World, Roblox, Minecraft,images/minecraft.jpg
+'What is the name of the museum-curating owl in "Animal Crossing"?', Blathers, Celeste, Tom Nook, Isabelle, Blathers,images/blathers.jpg
