@@ -2,6 +2,8 @@
 import pygame
 #the questions
 import csv
+#for randomization
+import random
 
 
 def main():
@@ -227,8 +229,9 @@ def wrap_text(text, font, max_width):
 
 #run the quiz with the chosen amount of questions
 def run_quiz_game(screen, font, questions, number_of_questions):
-
     while True:
+        #shuffle the list of questions
+        random.shuffle(questions)
         score = 0
 
         #display the selection of number of questions
