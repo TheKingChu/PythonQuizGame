@@ -3,6 +3,7 @@ import pygame
 #the questions
 import csv
 
+
 def main():
     #init pygame
     pygame.init()
@@ -29,10 +30,11 @@ def main():
 
 #a class for representing each question
 class Question:
-    def __init__(self, question, choices, answer):
+    def __init__(self, question, choices, answer, photo_path):
         self.question = question
         self.choices = choices
         self.answer = answer
+        self.photo_path = photo_path
 
 
 #reads the questions from csv file and creates question objects
@@ -43,9 +45,9 @@ def read_question_from_csv(file_name):
         #skip the header
         next(csv_reader)
         for row in csv_reader:
-            question, choice1, choice2, choice3, choice4, answer = row
+            question, choice1, choice2, choice3, choice4, answer, photo_path = row
             choices = [choice1, choice2, choice3, choice4]
-            questions.append(Question(question, choices, int(answer)))
+            questions.append(Question(question, choices, int(answer), photo_path))
         return questions
 
 
@@ -141,9 +143,10 @@ def display_question_selection(screen, font):
 
 
 #display a question and the 4 choices
-def display_question(screen, font, question):
+def display_question(screen, font, question, photo_path):
     #background color
     screen.fill((30, 30, 36))
+
 
     #display the question text with word-wrapping
     question_text = wrap_text(question.question, font, 700)
@@ -152,6 +155,25 @@ def display_question(screen, font, question):
         text = font.render(line, True, (255, 255, 255))
         screen.blit(text, (50, y_offset))
         y_offset += font.get_linesize()
+
+    #display photo in a rectangle in the center of the screen
+    if question.photo_path:
+        photo = pygame.image.load(photo_path)
+        photo_rect = photo.get_rect()
+        photo_rect.center = (screen.get_width() // 2, screen.get_height() // 2)
+        #set the width and height for the rectangle
+        photo_width, photo_height = 400, 300
+        #create a new rect with the correct width and height
+        photo_rect = pygame.Rect(photo_rect.centerx - photo_width // 2,
+                                 photo_rect.centery - photo_height // 2,
+                                 photo_width, photo_height)
+        pygame.draw.rect(screen, (255, 255, 255), photo_rect, 2)
+        #scale the photo to fit to the rect and keep the aspect ratio
+        scaled_photo = pygame.transform.scale(photo, (photo_width, photo_height))
+        #calculate the position so that the scaled photo will be centered in the rect
+        photo_pos = (photo_rect.centerx - scaled_photo.get_width() // 2,
+                     photo_rect.centery - scaled_photo.get_height() // 2)
+        screen.blit(scaled_photo, photo_pos)
 
     #color for each choice button
     button_colors = [(41, 110, 180), (177, 24, 200), (205, 56, 19), (31, 111, 91)]
@@ -206,7 +228,7 @@ def run_quiz_game(screen, font, questions, number_of_questions):
 
         #display each question with this for loop
         for question in questions[:number_of_questions]:
-            choice_buttons = display_question(screen, font, question)
+            choice_buttons = display_question(screen, font, question, question.photo_path)
 
             #wait for the player to chose an answer
             choice = None
