@@ -307,9 +307,9 @@ def display_result(screen, font, score, total_questions):
     percentage_correct = (score / total_questions) * 100
 
     #choose background color based on the correctness percentage
-    if percentage_correct == 0:
+    if percentage_correct <= 20:
         background_color = (123, 45, 38) #red
-    elif percentage_correct < 50:
+    elif percentage_correct <= 60:
         background_color = (126, 99, 16) #yellow
     else:
         background_color = (0, 61, 0) #green
