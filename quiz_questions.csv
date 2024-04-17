@@ -1,6 +1,6 @@
-question, choice1, choice2, choice3, choice4, answer
-"What is the name of the main character in "The Legend of Zelda" series?", Link, Zelda, Ganondorf, Tingle, 1
-"In what year was the first "Pokemon" game released in Japan?", 1999, 1997, 1998, 1996, 4
-"In "Overwatch" what is the name of the character known for her teleportation abilities?", Widowmaker, Tracer, Sombra, Moira, 3
-"In "League of Legends" what is the name of the in-game currency?", Gold, Silver, Platinum, Riot Point, 1
-"Whats the name of the main character in the "Red Dead Redemption" series?", John Marston, Arthur Morgan, Dutch van der Linde, Jack Marston, 2
+question, choice1, choice2, choice3, choice4, answer, photo_path
+"What is the name of the main character in "The Legend of Zelda" series?", Link, Zelda, Ganondorf, Tingle, 1, "images/zelda.jpg"
+"In what year was the first "Pokemon" game released in Japan?", 1999, 1997, 1998, 1996, 4, "images/redandgreen.jpg"
+"In "Overwatch" what is the name of the character known for her teleportation abilities?", Widowmaker, Tracer, Sombra, Moira, 3, "images/ow2.jpg"
+"In "League of Legends" what is the name of the in-game currency?", Gold, Silver, Platinum, Riot Point, 1, "images/lol.jpg"
+"Whats the name of the main character in the "Red Dead Redemption" series?", John Marston, Arthur Morgan, Dutch van der Linde, Jack Marston, 2, "images/rdr2.jpg"
