@@ -7,3 +7,4 @@ question, choice1, choice2, choice3, choice4, answer, photo_path
 'What is the name of the princess who Mario rescues in the "Super Mario" series?', Princess Peach, Princess Daisy, Princess Rosalina, Princess Toadstool, 1,images/peach.jpg
 'The company that created Fortnite also created a game engine named what?', Unity, Godot, Unreal, GameMaker, 3,images/enigines.jpg
 'What 2009 game was developed by Mojang?', Trove, Minecraft, Cube World, Roblox, 2,images/minecraft.jpg
+'What is the name of the museum-curating owl in "Animal Crossing"?', Blathers, Celeste, Tom Nook, Isabelle, 1,images/blathers.jpg
