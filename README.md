@@ -7,7 +7,7 @@ I am using Pygame for the GUI and CSV for the question file.
 ## Features
 - Start screen with Start and Quit buttons
 - Number of questions selector
-- Main game with question, photo, and choices
-- Result screen with time spent, number of correct answers
+- Main game with question, photo, countdown timer, and choices
+- Result screen the number of correct answers
     - Replay button
     - Quit button
