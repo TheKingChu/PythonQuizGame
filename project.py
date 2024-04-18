@@ -20,7 +20,7 @@ def main():
     #set the screen size
     screen = pygame.display.set_mode((800, 600))
     #title
-    pygame.display.set_caption("Quiz")
+    pygame.display.set_caption("Trivium Blast: Videogame Trivia")
     #FPS
     FPS = 60
     clock = pygame.time.Clock()
@@ -90,9 +90,9 @@ def display_start_screen(screen, font):
     screen_width, screen_height = screen.get_size()
 
     #title text
-    start_font_size = 60
+    start_font_size = 40
     start_font = pygame.font.Font(None, start_font_size)
-    start_text = start_font.render("Welcome to quiz!", True, (255, 255, 255))
+    start_text = start_font.render("Welcome to Trivium Blast: Videogame Trivia!", True, (255, 255, 255))
     start_text_rect = start_text.get_rect(center=(screen_width // 2, 50))
     screen.blit(start_text, start_text_rect)
 
@@ -546,7 +546,7 @@ def run_quiz_game(screen, font, questions):
                     play_sound(incorrect_sound)
 
         #display the result
-        display_result(screen, font, score, number_of_questions)
+        display_result(screen, score, number_of_questions)
         #replay and quit button for the result screen
         replay_button, quit_button = display_result_buttons(screen, font)
 
@@ -567,7 +567,7 @@ def run_quiz_game(screen, font, questions):
                 continue
             break
 
-def display_result(screen, font, score, total_questions):
+def display_result(screen, score, total_questions):
     #go back to start screen
     if total_questions == "back":
         return
