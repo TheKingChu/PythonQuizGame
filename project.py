@@ -5,10 +5,18 @@ import csv
 #for randomization
 import random
 
+#init pygame
+pygame.init()
+#load background music
+pygame.mixer.music.load("sounds/quiz music.wav")
+#play looping background music 
+pygame.mixer.music.play(-1)
+#load sound effects
+correct_sound = pygame.mixer.Sound("sounds/correct.wav")
+incorrect_sound = pygame.mixer.Sound("sounds/incorrect.wav")
+timer_tick_sound = pygame.mixer.Sound("sounds/button tick.wav")
 
 def main():
-    #init pygame
-    pygame.init()
     #set the screen size
     screen = pygame.display.set_mode((800, 600))
     #title
@@ -21,13 +29,26 @@ def main():
     #load questions
     questions = read_question_from_csv("quiz_questions.csv")
 
-    #display start scene
-    if display_start_screen(screen, font):
-        number_of_questions = display_question_selection(screen, font)
-        run_quiz_game(screen, font, questions, number_of_questions)
+    while True:
+        #display start scene
+        if display_start_screen(screen, font):
+            #if the start button is pressed display the question number selection
+            number_of_questions = display_question_selection(screen, font)
+            if number_of_questions == "back":
+                #go back to the start scene
+                continue
+            else:
+                run_quiz_game(screen, font, questions)
 
-    #quit
-    pygame.quit()
+        clock.tick(FPS)
+
+        #quit
+        pygame.quit()
+
+
+#to play sound effects
+def play_sound(sound):
+    sound.play()
 
 
 #a class for representing each question
@@ -75,6 +96,14 @@ def display_start_screen(screen, font):
     start_text_rect = start_text.get_rect(center=(screen_width // 2, 50))
     screen.blit(start_text, start_text_rect)
 
+    #option button (cogwheel)
+    cogwheel_img = pygame.image.load("images/cogwheel.png")
+    cogwheel_size = 65 #65 x 65
+    #resize the cogwheel image
+    cogwheel_img = pygame.transform.scale(cogwheel_img, (cogwheel_size, cogwheel_size))
+    cogwheel_rect = cogwheel_img.get_rect(topright=(screen_width - 10, 10))
+    screen.blit(cogwheel_img, cogwheel_rect)
+
     #start button
     start_button_width, start_button_height = 200, 50
     start_button = pygame.Rect((screen_width - start_button_width) // 2, 200, start_button_width, start_button_height)
@@ -83,15 +112,27 @@ def display_start_screen(screen, font):
     start_button_text_rect = start_button_text.get_rect(center=start_button.center)
     screen.blit(start_button_text, start_button_text_rect)
 
+    #how to play button
+    tutorial_button_width, tutorial_button_height = 200, 50
+    tutorial_button = pygame.Rect((screen_width - tutorial_button_width) // 2, 300, tutorial_button_width, tutorial_button_height)
+    pygame.draw.rect(screen, (0, 0, 200), tutorial_button)
+    tutorial_button_text = font.render("How to Play", True, (255, 255, 255))
+    tutorial_button_text_rect = tutorial_button_text.get_rect(center=tutorial_button.center)
+    screen.blit(tutorial_button_text, tutorial_button_text_rect)
+
     #quit button
     quit_button_width, quit_button_height = 200, 50
-    quit_button = pygame.Rect((screen_width - quit_button_width) // 2, 300, quit_button_width, quit_button_height)
+    quit_button = pygame.Rect((screen_width - quit_button_width) // 2, 400, quit_button_width, quit_button_height)
     pygame.draw.rect(screen, (214, 40, 57), quit_button)
     quit_button_text = font.render("Quit", True, (255, 255, 255))
     quit_button_text_rect = quit_button_text.get_rect(center=quit_button.center)
     screen.blit(quit_button_text, quit_button_text_rect)
 
     pygame.display.flip()
+
+    #init sound volume levels
+    music_volume = 1.0
+    sound_effect_volume = 1.0
 
     while True:
         for event in pygame.event.get():
@@ -101,9 +142,204 @@ def display_start_screen(screen, font):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if start_button.collidepoint(event.pos):
                     return True
+                elif tutorial_button.collidepoint(event.pos):
+                    tutorial_screen(screen, font)
+                    #clear the screen
+                    screen.fill((30, 30, 36))
+                    #redraw the start screen with text and buttons
+                    #buttons
+                    pygame.draw.rect(screen, (0, 200, 0), start_button)
+                    pygame.draw.rect(screen, (0, 0, 200), tutorial_button)
+                    pygame.draw.rect(screen, (214, 40, 57), quit_button)
+                    #text
+                    screen.blit(start_text, start_text_rect)
+                    screen.blit(start_button_text, start_button_text_rect)
+                    screen.blit(tutorial_button_text, tutorial_button_text_rect)
+                    screen.blit(quit_button_text, quit_button_text_rect)
+                    screen.blit(cogwheel_img, cogwheel_rect)
+                    pygame.display.flip()
+                elif cogwheel_rect.collidepoint(event.pos):
+                    sound_option_screen(screen, font, music_volume, sound_effect_volume)
+                    
+                    #clear the screen
+                    screen.fill((30, 30, 36))
+                    #redraw the start screen with text and buttons
+                    #buttons
+                    pygame.draw.rect(screen, (0, 200, 0), start_button)
+                    pygame.draw.rect(screen, (0, 0, 200), tutorial_button)
+                    pygame.draw.rect(screen, (214, 40, 57), quit_button)
+                    #text
+                    screen.blit(start_text, start_text_rect)
+                    screen.blit(start_button_text, start_button_text_rect)
+                    screen.blit(tutorial_button_text, tutorial_button_text_rect)
+                    screen.blit(quit_button_text, quit_button_text_rect)
+                    screen.blit(cogwheel_img, cogwheel_rect)
+                    pygame.display.flip()
                 elif quit_button.collidepoint(event.pos):
                     pygame.quit()
                     quit()
+
+
+def sound_option_screen(screen, font, music_volume, sound_effect_volume):
+    #clear the screen
+    screen.fill((30, 30, 36))
+
+    #for centering the text and buttons on the screen
+    screen_width, screen_height = screen.get_size()
+
+    #defining the slider dimentions
+    slider_width, slider_height = 200, 20
+    slider_x = (screen.get_width() - slider_width) // 2
+    music_slider_y = 200
+    effect_slider_y = 300
+
+    #slider rects
+    music_slider_rect = pygame.Rect(slider_x, music_slider_y, slider_width, slider_height)
+    sound_effect_slider_rect = pygame.Rect(slider_x, effect_slider_y, slider_width, slider_height)
+
+    #knobs
+    knob_radius = 10
+    music_knob = pygame.Rect(int(slider_x + music_volume * slider_width - knob_radius), music_slider_y - knob_radius,
+                             knob_radius * 2, knob_radius * 2)
+    effects_knob = pygame.Rect(int(slider_x + sound_effect_volume * slider_width - knob_radius), effect_slider_y - knob_radius,
+                               knob_radius * 2, knob_radius * 2)
+    
+    #drawing the sliders
+    pygame.draw.rect(screen, (150, 150, 150), music_slider_rect)
+    pygame.draw.rect(screen, (150, 150, 150), sound_effect_slider_rect)
+    #draw knobs
+    pygame.draw.circle(screen, (0, 200, 0), music_knob.center, knob_radius)
+    pygame.draw.circle(screen, (0, 200, 0), effects_knob.center, knob_radius)
+
+    #text
+    music_text = font.render("Music", True, (255, 255, 255))
+    music_text_rect = music_text.get_rect(midleft=(music_slider_rect.left - 100, music_slider_rect.centery))
+    screen.blit(music_text, music_text_rect)
+    effect_text = font.render("Sound Effects", True, (255, 255, 255))
+    effect_text_rect = effect_text.get_rect(midleft=(sound_effect_slider_rect.left - 150, sound_effect_slider_rect.centery))
+    screen.blit(effect_text, effect_text_rect)
+    #to show sound percantage
+    #music
+    music_volume_percentage = int(music_volume * 100)
+    music_volume_text = font.render(f"{music_volume_percentage}%", True, (255, 255, 255))
+    music_volume_text_rect = music_volume_text.get_rect(midright=(music_slider_rect.right + 70, music_slider_rect.centery))
+    screen.blit(music_volume_text, music_volume_text_rect)
+    #sound effects
+    effect_volume_percentage = int(sound_effect_volume * 100)
+    effect_volume_text = font.render(f"{effect_volume_percentage}%", True, (255, 255, 255))
+    effect_volume_text_rect = effect_volume_text.get_rect(midright=(sound_effect_slider_rect.right + 70, sound_effect_slider_rect.centery))
+    screen.blit(effect_volume_text, effect_volume_text_rect)
+
+    #back button
+    back_button_width, back_button_height = 200, 50
+    back_button = pygame.Rect((screen_width - back_button_width) // 2, 400, back_button_width, back_button_height)
+    pygame.draw.rect(screen, (214, 40, 57), back_button)
+    back_button_text = font.render("Back", True, (255, 255, 255))
+    back_button_text_rect = back_button_text.get_rect(center=back_button.center)
+    screen.blit(back_button_text, back_button_text_rect)
+
+    pygame.display.flip()
+
+    #is dragging flags
+    dragging_music = False
+    dragging_effects = False
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                #update volume based on slider position
+                if music_knob.collidepoint(event.pos):
+                    dragging_music = True
+                elif effects_knob.collidepoint(event.pos):
+                    dragging_effects = True
+                elif back_button.collidepoint(event.pos):
+                    print("back button pressed")
+                    return False
+            elif event.type == pygame.MOUSEBUTTONUP:
+                dragging_music = False
+                dragging_effects = False
+            elif event.type == pygame.MOUSEMOTION:
+                if dragging_music:
+                    music_knob.centerx = max(slider_x, min(slider_x + slider_width, event.pos[0]))
+                    music_volume = (music_knob.centerx - slider_x) / slider_width
+                    music_volume_percentage = int(music_volume * 100)
+                    music_volume_text = font.render(f"{music_volume_percentage}%", True, (255, 255, 255))
+                elif dragging_effects:
+                    effects_knob.centerx = max(slider_x, min(slider_x + slider_width, event.pos[0]))
+                    sound_effect_volume = (effects_knob.centerx - slider_x) / slider_width
+                    effect_volume_percentage = int(sound_effect_volume * 100)
+                    effect_volume_text = font.render(f"{effect_volume_percentage}%", True, (255, 255, 255))
+
+        #update volume levels
+        pygame.mixer.music.set_volume(music_volume)
+        correct_sound.set_volume(sound_effect_volume)
+        incorrect_sound.set_volume(sound_effect_volume)
+        timer_tick_sound.set_volume(sound_effect_volume)
+
+        #redraw the knobs
+        screen.fill((30, 30, 36))
+        pygame.draw.rect(screen, (255, 255, 255), music_slider_rect)
+        pygame.draw.rect(screen, (255, 255, 255), sound_effect_slider_rect)
+        pygame.draw.circle(screen, (0, 200, 0), music_knob.center, knob_radius)
+        pygame.draw.circle(screen, (0, 200, 0), effects_knob.center, knob_radius)
+        #redraw text
+        screen.blit(music_text, music_text_rect)
+        screen.blit(effect_text, effect_text_rect)
+        screen.blit(music_volume_text, music_volume_text_rect)
+        screen.blit(effect_volume_text, effect_volume_text_rect)
+        #redraw the back button
+        pygame.draw.rect(screen, (214, 40, 57), back_button)
+        screen.blit(back_button_text, back_button_text_rect)
+
+        pygame.display.flip()
+
+    #return updated volume levels
+    return music_volume, sound_effect_volume
+
+
+def tutorial_screen(screen, font):
+    #to have a clear background again
+    screen.fill((30, 30, 36))
+
+    #for centering the text and buttons on the screen
+    screen_width, screen_height = screen.get_size()
+
+    tutorial_text = [
+        "How to Play:",
+        "- You will be presented with a series of questions.",
+        "- Each question has 4 choices.",
+        "- Select the answer by clicking on it."
+    ]
+
+    y_offset = 150
+    for line in tutorial_text:
+        text = font.render(line, True, (255, 255, 255))
+        text_rect = text.get_rect(center=(screen.get_width() // 2, y_offset))
+        screen.blit(text, text_rect)
+        y_offset += 30
+
+    #back button
+    back_button_width, back_button_height = 200, 50
+    back_button = pygame.Rect((screen_width - back_button_width) // 2, 400, back_button_width, back_button_height)
+    pygame.draw.rect(screen, (214, 40, 57), back_button)
+    back_button_text = font.render("Back", True, (255, 255, 255))
+    back_button_text_rect = back_button_text.get_rect(center=back_button.center)
+    screen.blit(back_button_text, back_button_text_rect)
+
+    pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                #return to the previous scene
+                if back_button.collidepoint(event.pos):
+                    return False
 
 
 #choose how many questions to play with
@@ -129,11 +365,18 @@ def display_question_selection(screen, font):
     button_10_text = font.render("10 questions", True, (255, 255, 255))
     screen.blit(button_10_text, (340, 260))
 
-    #20 questions
-    button_20 = pygame.Rect(300, 350, 200, 50)
-    pygame.draw.rect(screen, (21, 121, 31), button_20)
-    button_20_text = font.render("20 questions", True, (255, 255, 255))
-    screen.blit(button_20_text, (340, 360))
+    #15 questions
+    button_15 = pygame.Rect(300, 350, 200, 50)
+    pygame.draw.rect(screen, (21, 121, 31), button_15)
+    button_15_text = font.render("15 questions", True, (255, 255, 255))
+    screen.blit(button_15_text, (340, 360))
+
+    #back button
+    back_button = pygame.Rect(300, 450, 200, 50)
+    pygame.draw.rect(screen, (214, 40, 57), back_button)
+    back_button_text = font.render("Back", True, (255, 255, 255))
+    back_button_text_rect = back_button_text.get_rect(center=back_button.center)
+    screen.blit(back_button_text, back_button_text_rect)
 
     pygame.display.flip()
 
@@ -147,8 +390,12 @@ def display_question_selection(screen, font):
                     return 5
                 elif button_10.collidepoint(event.pos):
                     return 10
-                elif button_20.collidepoint(event.pos):
-                    return 20
+                elif button_15.collidepoint(event.pos):
+                    return 15
+                elif back_button.collidepoint(event.pos):
+                    #clear the screen
+                    screen.fill((30, 30, 36))
+                    return "back"
 
 
 #display a question and the 4 choices
@@ -235,50 +482,68 @@ def wrap_text(text, font, max_width):
 
 
 #run the quiz with the chosen amount of questions
-def run_quiz_game(screen, font, questions, number_of_questions):
+def run_quiz_game(screen, font, questions):
+    #lower the ticking sound
+    timer_tick_sound.set_volume(0.2)
+
     while True:
         #shuffle the list of questions
         random.shuffle(questions)
+
+        #init the score
         score = 0
 
         #display the selection of number of questions
         number_of_questions = display_question_selection(screen, font)
 
-        #display each question with this for loop
-        for question in questions[:number_of_questions]:
-            print("Shuffled Choices:", question.choices)
-            print("Correct Answer:", question.answer)
-            #start the countdown timer
-            start_timer = pygame.time.get_ticks()
-            countdown_timer = 10 #10 second countdown
-            while countdown_timer > 0:
-                #calculate the elapsed time
-                elapsed_time = (pygame.time.get_ticks() - start_timer) / 1000.0
-                #update the countdown timer
-                countdown_timer = max(10 - elapsed_time, 0)
-                choice_buttons = display_question(screen, font, question, question.photo_path, countdown_timer)
+        #check if the back button was pressed then break out of loop
+        if number_of_questions is False:
+            break
+        
+        #checks if the number of questions are actually numbers
+        if isinstance(number_of_questions, int):
+            #display each question with this for loop
+            for question in questions[:number_of_questions]:
+                #start the countdown timer
+                start_timer = pygame.time.get_ticks()
+                countdown_timer = 10 #10 second countdown
+                ticking_timer = 0
+                while countdown_timer > 0:
+                    #calculate the elapsed time
+                    elapsed_time = (pygame.time.get_ticks() - start_timer) / 1000.0
+                    #update the countdown timer
+                    countdown_timer = max(10 - elapsed_time, 0)
+                    #check if one seconds has passed for the ticking sound to be accurate
+                    if int(elapsed_time) > ticking_timer:
+                        play_sound(timer_tick_sound)
+                        ticking_timer = int(elapsed_time)
 
-                #wait for the player to chose an answer
-                choice = None
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        quit()
-                    elif event.type == pygame.MOUSEBUTTONDOWN:
-                        for i, button in enumerate(choice_buttons):
-                            if button.collidepoint(event.pos):
-                                choice = i
+                    choice_buttons = display_question(screen, font, question, question.photo_path, countdown_timer)
 
-                #check if the time is up
-                if countdown_timer == 0 or choice is not None:
-                    #move to the next question
-                    break
+                    #wait for the player to chose an answer
+                    choice = None
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            quit()
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            for i, button in enumerate(choice_buttons):
+                                if button.collidepoint(event.pos):
+                                    choice = i
 
-                pygame.display.flip()
+                    #check if the time is up
+                    if countdown_timer == 0 or choice is not None:
+                        #move to the next question
+                        break
 
-            #check if the selected choice mathes the shuffled choice index and then add a point if its a correct match
-            if choice == question.choices.index(question.answer):
-                score += 1
+                    pygame.display.flip()
+
+                #check if the selected choice mathes the shuffled choice index and then add a point if its a correct match
+                if choice == question.choices.index(question.answer):
+                    score += 1
+                    play_sound(correct_sound)
+                else:
+                    play_sound(incorrect_sound)
 
         #display the result
         display_result(screen, font, score, number_of_questions)
@@ -303,8 +568,16 @@ def run_quiz_game(screen, font, questions, number_of_questions):
             break
 
 def display_result(screen, font, score, total_questions):
-    #calculate percentage of correct answers
-    percentage_correct = (score / total_questions) * 100
+    #go back to start screen
+    if total_questions == "back":
+        return
+
+    #ensures total questions is not zero to not have zero division error
+    if total_questions == 0:
+        percentage_correct = 0
+    else:
+        #calculate percentage of correct answers
+        percentage_correct = (score / total_questions) * 100
 
     #choose background color based on the correctness percentage
     if percentage_correct <= 20:
