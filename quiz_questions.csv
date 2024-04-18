@@ -1,10 +1,16 @@
 question, choice1, choice2, choice3, choice4, answer, photo_path
-'What is the name of the main character in "The Legend of Zelda" series?', Link, Zelda, Ganondorf, Tingle, Link,images/zelda.jpg
-'In what year was the first "Pokemon" game released in Japan?', 1999, 1997, 1998, 1996, 1996,images/redandgreen.jpg
-'In "Overwatch" what is the name of the character known for her teleportation abilities?', Widowmaker, Tracer, Sombra, Moira, Sombra,images/ow2.jpg
-'In "League of Legends" what is the name of the in-game currency?', Gold, Silver, Platinum, Riot Point, Gold,images/lol.jpg
-'Whats the name of the main character in the "Red Dead Redemption" series?', John Marston, Arthur Morgan, Dutch van der Linde, Jack Marston, Arthur Morgan,images/rdr2.jpg
-'What is the name of the princess who Mario rescues in the "Super Mario" series?', Princess Peach, Princess Daisy, Princess Rosalina, Princess Toadstool, Princess Peach,images/peach.jpg
-'The company that created Fortnite also created a game engine named what?', Unity, Godot, Unreal, GameMaker, Unreal,images/enigines.jpg
-'What 2009 game was developed by Mojang?', Trove, Minecraft, Cube World, Roblox, Minecraft,images/minecraft.jpg
-'What is the name of the museum-curating owl in "Animal Crossing"?', Blathers, Celeste, Tom Nook, Isabelle, Blathers,images/blathers.jpg
+"What is the name of the main character in The Legend of Zelda series?", Link, Zelda, Ganondorf, Tingle, Link,images/zelda.jpg
+"In what year was the first Pokemon game released in Japan?", 1999, 1997, 1998, 1996, 1996,images/redandgreen.jpg
+"In Overwatch what is the name of the character known for her teleportation abilities?", Widowmaker, Tracer, Sombra, Moira, Sombra,images/ow2.jpg
+"In League of Legends what is the name of the in-game currency?", Gold, Silver, Platinum, Riot Point, Gold,images/lol.jpg
+"Whats the name of the main character in the Red Dead Redemption series?", John Marston, Arthur Morgan, Dutch van der Linde, Jack Marston, Arthur Morgan,images/rdr2.jpg
+"What is the name of the princess who Mario rescues in the Super Mario series?", Princess Peach, Princess Daisy, Princess Rosalina, Princess Toadstool, Princess Peach,images/peach.jpg
+"The company that created Fortnite also created a game engine named what?", Unity, Godot, Unreal, GameMaker, Unreal,images/enigines.jpg
+"What 2009 game was developed by Mojang?", Trove, Minecraft, Cube World, Roblox, Minecraft,images/minecraft.jpg
+"What is the name of the museum-curating owl in Animal Crossing?", Blathers, Celeste, Tom Nook, Isabelle, Blathers,images/blathers.jpg
+"Which of these games features a character named Nathan Drake?", Uncharted, Tomb Raider, Assassins"s Creed, Prince of Persia, Uncharted,images/nathan.jpg
+"What is the name of the virus in the Resident Evil series?", C-Virus, G-Virus, E-Virus, T-Virus, T-Virus,images/residentevil.jpg
+"In Dark Souls 3 what is the name of the hub where you can upgrade gear, level up and purchase items?", Firelink Shrine, Anor Londo, Kiln of the First Flame, Undead Settlement, Firelink Shrine,images/darksouls.jpg
+"In StarCraft which alien race is known for its swift and agile units?", Protoss, Terran, Zerg, Xel'Naga, Zerg,images/starcraft.jpg
+"In The Witcher 3: Wild Hunt, what is the name of the continent where most of the game's event takes place?", The Continent, Azeroth, Tamriel, Westeros, The Continent,images/thewitcher.jpg
+"Which of the following champions from League of Legends is classified as a support?", Ashe, Yasuo, Sona, Darius, Sona,images/lol.jpg
