@@ -29,7 +29,8 @@ def main():
     #load questions
     questions = read_question_from_csv("quiz_questions.csv")
 
-    while True:
+    running = True
+    while running:
         #display start scene
         if display_start_screen(screen, font):
             #if the start button is pressed display the question number selection
@@ -42,8 +43,12 @@ def main():
 
         clock.tick(FPS)
 
-        #quit
-        pygame.quit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+    #quit
+    pygame.quit()
 
 
 #to play sound effects
@@ -82,7 +87,7 @@ def read_question_from_csv(file_name):
 
 
 #START SCENE
-def display_start_screen(screen, font):
+def draw_start_screen(screen, font):
     #background color
     screen.fill((30, 30, 36)) 
 
@@ -129,6 +134,10 @@ def display_start_screen(screen, font):
     screen.blit(quit_button_text, quit_button_text_rect)
 
     pygame.display.flip()
+    return start_button, tutorial_button, cogwheel_rect, quit_button
+
+def display_start_screen(screen, font):    
+    start_button, tutorial_button, cogwheel_rect, quit_button = draw_start_screen(screen, font)
 
     #init sound volume levels
     music_volume = 1.0
@@ -144,40 +153,15 @@ def display_start_screen(screen, font):
                     return True
                 elif tutorial_button.collidepoint(event.pos):
                     tutorial_screen(screen, font)
-                    #clear the screen
-                    screen.fill((30, 30, 36))
-                    #redraw the start screen with text and buttons
-                    #buttons
-                    pygame.draw.rect(screen, (0, 200, 0), start_button)
-                    pygame.draw.rect(screen, (0, 0, 200), tutorial_button)
-                    pygame.draw.rect(screen, (214, 40, 57), quit_button)
-                    #text
-                    screen.blit(start_text, start_text_rect)
-                    screen.blit(start_button_text, start_button_text_rect)
-                    screen.blit(tutorial_button_text, tutorial_button_text_rect)
-                    screen.blit(quit_button_text, quit_button_text_rect)
-                    screen.blit(cogwheel_img, cogwheel_rect)
-                    pygame.display.flip()
+                    draw_start_screen(screen, font)
                 elif cogwheel_rect.collidepoint(event.pos):
                     sound_option_screen(screen, font, music_volume, sound_effect_volume)
-                    
-                    #clear the screen
-                    screen.fill((30, 30, 36))
-                    #redraw the start screen with text and buttons
-                    #buttons
-                    pygame.draw.rect(screen, (0, 200, 0), start_button)
-                    pygame.draw.rect(screen, (0, 0, 200), tutorial_button)
-                    pygame.draw.rect(screen, (214, 40, 57), quit_button)
-                    #text
-                    screen.blit(start_text, start_text_rect)
-                    screen.blit(start_button_text, start_button_text_rect)
-                    screen.blit(tutorial_button_text, tutorial_button_text_rect)
-                    screen.blit(quit_button_text, quit_button_text_rect)
-                    screen.blit(cogwheel_img, cogwheel_rect)
-                    pygame.display.flip()
+                    draw_start_screen(screen, font)
                 elif quit_button.collidepoint(event.pos):
                     pygame.quit()
                     quit()
+
+        draw_start_screen(screen, font)
 
 
 def sound_option_screen(screen, font, music_volume, sound_effect_volume):
@@ -307,6 +291,10 @@ def tutorial_screen(screen, font):
     #for centering the text and buttons on the screen
     screen_width, screen_height = screen.get_size()
 
+    #bigger font size for the title
+    title_font_size = 40
+    title_font = pygame.font.Font(None, title_font_size)
+
     tutorial_text = [
         "How to Play:",
         "- You will be presented with a series of questions.",
@@ -315,8 +303,12 @@ def tutorial_screen(screen, font):
     ]
 
     y_offset = 150
-    for line in tutorial_text:
-        text = font.render(line, True, (255, 255, 255))
+    for index, line in enumerate(tutorial_text):
+        if index == 0:
+            text = title_font.render(line, True, (255, 255, 255))
+        else:
+            text = font.render(line, True, (255, 255, 255))
+
         text_rect = text.get_rect(center=(screen.get_width() // 2, y_offset))
         screen.blit(text, text_rect)
         y_offset += 30
@@ -393,8 +385,6 @@ def display_question_selection(screen, font):
                 elif button_15.collidepoint(event.pos):
                     return 15
                 elif back_button.collidepoint(event.pos):
-                    #clear the screen
-                    screen.fill((30, 30, 36))
                     return "back"
 
 
@@ -497,7 +487,7 @@ def run_quiz_game(screen, font, questions):
         number_of_questions = display_question_selection(screen, font)
 
         #check if the back button was pressed then break out of loop
-        if number_of_questions is False:
+        if number_of_questions == "back":
             break
         
         #checks if the number of questions are actually numbers
