@@ -1,6 +1,6 @@
 # Trivium Blast: Videogame Trivia
 
-#### Video Demo: <URL HERE>
+#### Video Demo: <[CS50's Python Final Project - Trivium Blast: Videogame Trivia](https://youtu.be/C4XkoSzqXGc)>
 ## Introduction:
 Videogame trivia game! You the player are presented with a series of questions, each with 4 possible answers, only 1 being the correct one. It's developed using Pygame and CSV.
 
